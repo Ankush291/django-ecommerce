@@ -42,7 +42,7 @@
             <br>
 
             <div class="box-element hidden" id="payment-info">
-                <small>Payment Options</small>
+                <p>Payment Options </p> <button id="make-payment" class="btn btn-success w-100">Make Payment</button>
             </div>
         </div>
 
@@ -65,4 +65,29 @@
             </div>
         </div>
     </div>
+    <script type='text/javascript'>
+        var shipping = "{{order.shipping}}"
+        // console.log(shipping)
+        if (shipping == "False"){
+            document.getElementById("shipping-info").innerHTML = ''
+        }
+
+        var form = document.getElementById("form-button")
+        form.addEventListener('click', function(e){
+            e.preventDefault()
+            // console.log("Form Submited")
+            document.getElementById("form-button").classList.add("hidden")
+            document.getElementById("payment-info").classList.remove("hidden")
+
+        })
+
+        var payment = document.getElementById("make-payment")
+        payment.addEventListener('click', function(){
+            submitFormData()
+        })
+        
+        function submitFormData(){
+            console.log("Payment Button Clicked")
+        }
+    </script>
 {% endblock %}
