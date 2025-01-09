@@ -1,6 +1,14 @@
 {% extends "store/main.html" %}
 {% load static %}
 {% block content %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {% if messages %}
+    {% for message in messages %}
+        <p>{{message}}</p>
+    {% endfor %}
+    {% endif %}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
     <div class="row">
         {% for product in products %}
         <div class="col-lg-4">

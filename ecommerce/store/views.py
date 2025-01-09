@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 import json
 from .models import *
+from .forms import RegistrationForm
 # Create your views here.
 
 def store(request):
@@ -18,6 +21,42 @@ def store(request):
     products = Product.objects.all()
     context = {'products': products, 'cartItems': cartItems}
     return render(request, 'store/store.html', context)
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, ("Login successful"))
+            return redirect('store')
+        else:
+            messages.error(request, ("Username or Password is Incorrect"))
+            return redirect('login')
+        
+    else:
+        return render(request, 'store/login.html')
+
+def logout_user(request):
+    logout(request)
+    messages.success(request, ("Logout successful"))
+    return redirect('store')
+
+def register_user(request):
+    form = RegistrationForm()
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created successfully for {username}')
+            return redirect('login')
+        else:
+            form = RegistrationForm()
+    return render(request, 'store/register.html', {'form': form})
 
 def cart(request):
 
